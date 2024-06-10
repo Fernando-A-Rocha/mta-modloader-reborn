@@ -1,4 +1,4 @@
-# Modloader Reborn
+![MTA modloader reborn banner SM](https://github.com/Fernando-A-Rocha/mta-modloader-reborn/assets/34967844/d330016b-03e4-42a3-bd8b-bdb8793d25bc)
 
 Easy to use modloader for MTA:SA.
 
