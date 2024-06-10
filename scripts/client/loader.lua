@@ -2,8 +2,8 @@
 
 -- Currently supports vehicle and skin models
 
--- Security feature: Only files provided by the server are loaded
---   meaning that if the user adds random files to the mods directory, they won't be loaded.
+-- Security feature: Only files provided by the server are loaded, meaning that if the user adds random files
+-- to the mods directory in their resource cache, they won't be recognized and loaded.
 
 local CONFIG_DIR_MODS = "mods"
 
