@@ -1,3 +1,4 @@
+-- Modloader Reborn by Nando (https://github.com/Fernando-A-Rocha/mta-modloader-reborn) [June 2024]
 
 DATA_VEHICLES = {
     [400]={dff="landstal",txd="landstal"},
