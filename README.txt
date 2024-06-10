@@ -1,5 +1,11 @@
 
   «««« Modloader Reborn »»»»  
+
+
+  Download: https://github.com/Fernando-A-Rocha/mta-modloader-reborn/releases/latest
+
+
+  >>   TUTORIAL   <<
   
   Mods placed inside the following folders will be loaded automatically, replacing the matching game models:
   
