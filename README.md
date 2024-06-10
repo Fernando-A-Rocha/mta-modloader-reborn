@@ -6,6 +6,8 @@ Simply drag and drop the modded DFF/TXD files into the mods folder. They will be
 
 **Security feature**: Only files provided by the server are loaded, meaning that if the user adds random files to the mods directory in their resource cache, they won't be recognized and loaded.
 
+**Supported models**: Currently the script will automatically replace vehicle and skin models via their ID or model name according to GTA:SA.
+
 ## Download
 
 **Latest release**: [https://github.com/Fernando-A-Rocha/mta-modloader-reborn/releases/latest](https://github.com/Fernando-A-Rocha/mta-modloader-reborn/releases/latest)
@@ -31,8 +33,7 @@ or
 
 - 411.dff
 - 411.txd
-	
-	
+
 Replacing the Clown skin (ID 264):
 
 - wmoice.dff

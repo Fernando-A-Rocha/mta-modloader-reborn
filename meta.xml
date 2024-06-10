@@ -8,8 +8,9 @@
       https://nightly.mtasa.com  -->
     <min_mta_version client="1.6.0-9.22505.0" server="1.6.0-9.22505.0"></min_mta_version>
 
-    <script src="scripts/client/data.lua" type="client"/>
-    <script src="scripts/client/loader.lua" type="client"/>
+    <script src="scripts/client/*.lua" type="client"/>
+    <script src="scripts/server/*.lua" type="server"/>
+    <script src="scripts/shared/*.lua" type="shared"/>
 
     <file src="mods/README.txt"/>
 
