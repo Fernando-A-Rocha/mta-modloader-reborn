@@ -69,10 +69,13 @@ local function prepareMods()
             outputMsg("File name doesn't correspond to vehicle/skin model name/ID: " .. fileName, 2)
             return
         end
+        if not modList[model] then
+            modList[model] = {}
+        end
         if isDFF then
-            modList[#modList+1] = {type="dff", model=model, path=realFilePath}
+            modList[model].dffPath = realFilePath
         else
-            modList[#modList+1] = {type="txd", model=model, path=realFilePath}
+            modList[model].txdPath = realFilePath
         end
     end
 

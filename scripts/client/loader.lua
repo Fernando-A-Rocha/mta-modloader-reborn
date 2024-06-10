@@ -2,46 +2,64 @@
 
 addEvent("modloader_reborn:loadMods", true)
 
-local function loadMods(modList)
-    assert(type(modList)=="table", "Invalid argument #1 to 'loadMods' (table expected, got " .. type(modList) .. ")" )
+local AMOUNT_MODS_PER_BATCH = 2
+local TIME_MS_BETWEEN_BATCHES = 1000
 
-    local replaceTextures = {}
-    local replaceModels = {}
+local modsToLoad = {}
 
-    for _, mod in pairs(modList) do
-        local modType = mod.type
-        local filePath = mod.path
-        assert(type(modType)=="string", "Invalid mod entry (type) in 'loadMods' (string expected, got " .. type(modType) .. ")" )
-        assert(type(filePath)=="string", "Invalid mod entry (path) in 'loadMods' (string expected, got " .. type(filePath) .. ")" )
-        local fileHandle = fileOpen(filePath, true)
-        if fileHandle then
-            local fileContent = fileGetContents(fileHandle, true) -- Verifies checksum
-            fileClose(fileHandle)
-            if fileContent then
-                local model = mod.model
-                assert(type(model)=="number", "Invalid mod entry (model) in 'loadMods' (number expected, got " .. type(model) .. ")" )
-                if modType == "txd" then
-                    replaceTextures[model] = fileContent
-                elseif modType == "dff" then
-                    replaceModels[model] = fileContent
+local function beginLoadingMods()
+
+    local loadedCounter = 0
+
+    for model, mod in pairs(modsToLoad) do
+        assert(type(model)=="number", "Invalid mod model: " .. inspect(model))
+        assert(type(mod)=="table", "Invalid mod data: " .. inspect(mod))
+        local txdPath = mod.txdPath
+        if type(txdPath) == "string" then
+            local fileHandle = fileOpen(txdPath, true)
+            if fileHandle then
+                local fileContent = fileGetContents(fileHandle, true) -- Verifies checksum
+                fileClose(fileHandle)
+                if fileContent then
+                    local txdElement = engineLoadTXD(fileContent)
+                    if txdElement then
+                        engineImportTXD(txdElement, model)
+                    end
                 end
             end
         end
-    end
-
-    for model, fileContent in pairs(replaceTextures) do
-        local txdElement = engineLoadTXD(fileContent)
-        if txdElement then
-            engineImportTXD(txdElement, model)
+        local dffPath = mod.dffPath
+        if type(dffPath) == "string" then
+            local fileHandle = fileOpen(dffPath, true)
+            if fileHandle then
+                local fileContent = fileGetContents(fileHandle, true) -- Verifies checksum
+                fileClose(fileHandle)
+                if fileContent then
+                    local dffElement = engineLoadDFF(fileContent)
+                    if dffElement then
+                        engineReplaceModel(dffElement, model)
+                    end
+                end
+            end
+        end
+        modsToLoad[model] = nil
+        loadedCounter = loadedCounter + 1
+        if loadedCounter >= AMOUNT_MODS_PER_BATCH then
+            break
         end
     end
-    for model, fileContent in pairs(replaceModels) do
-        local dffElement = engineLoadDFF(fileContent)
-        if dffElement then
-            engineReplaceModel(dffElement, model)
-        end
-    end
 
-    collectgarbage("collect")
+    outputMsg(("Replaced %d game models."):format(loadedCounter), 3)
+
+    if next(modsToLoad) then
+        outputMsg(("Waiting %d seconds to load next batch of mods..."):format(TIME_MS_BETWEEN_BATCHES/1000), 3)
+        setTimer(beginLoadingMods, TIME_MS_BETWEEN_BATCHES, 1)
+    end
+end
+
+local function loadMods(modList)
+    assert(type(modList)=="table", "Invalid argument #1 to 'loadMods' (table expected, got " .. type(modList) .. ")" )
+    modsToLoad = modList
+    beginLoadingMods()
 end
 addEventHandler("modloader_reborn:loadMods", resourceRoot, loadMods, false)
