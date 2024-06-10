@@ -1,0 +1,4 @@
+
+CONFIG_DIR_MODS = "mods/"
+CONFIG_LOAD_VEHICLES = true
+CONFIG_LOAD_SKINS = true

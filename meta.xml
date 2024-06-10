@@ -1,0 +1,20 @@
+<meta>
+    <info author="Fernando" name="modloader-reborn"
+      description="minimalistic script that replaces skins, vehicles and weapons from files without any config needed"
+      version="1.0.0"
+      type="script"/>
+
+    <!-- IMPORTANT TO HAVE THIS VERSION OR HIGHER SO THAT IT WORK AS EXPECTED
+      https://nightly.mtasa.com  -->
+    <min_mta_version client="1.6.0-9.22505.0" server="1.6.0-9.22505.0"></min_mta_version>
+
+    <script src="scripts/client/config.lua" type="client"/>
+    <script src="scripts/client/data.lua" type="client"/>
+    <script src="scripts/client/loader.lua" type="client"/>
+
+    <file src="mods/skins/*.dff"/>
+    <file src="mods/skins/*.txd"/>
+
+    <file src="mods/vehicles/*.dff"/>
+    <file src="mods/vehicles/*.txd"/>
+</meta>
