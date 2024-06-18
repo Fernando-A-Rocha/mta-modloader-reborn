@@ -8,6 +8,11 @@
       https://nightly.mtasa.com  -->
     <min_mta_version client="1.6.0-9.22505.0" server="1.6.0-9.22505.0"></min_mta_version>
 
+    <settings>
+      <setting name="*AMOUNT_MODS_PER_BATCH" value="[10]" friendlyname="Amount of Mods per Batch" accept="positive number" desc="How many mods should be loaded together in batches?"/>
+      <setting name="*TIME_MS_BETWEEN_BATCHES" value="[1000]" friendlyname="Time Between Batches (ms)" accept="positive number" desc="How many milliseconds should the script wait before loading the next batch of mods?"/>
+    </settings>
+
     <script src="scripts/client/*.lua" type="client"/>
     <script src="scripts/server/*.lua" type="server"/>
     <script src="scripts/shared/*.lua" type="shared"/>

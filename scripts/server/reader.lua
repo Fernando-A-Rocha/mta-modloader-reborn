@@ -1,12 +1,18 @@
 -- Modloader Reborn by Nando (https://github.com/Fernando-A-Rocha/mta-modloader-reborn) [June 2024]
 
 local CONFIG_DIR_MODS = "mods"
+local SETTING_NAMES = {"*AMOUNT_MODS_PER_BATCH", "*TIME_MS_BETWEEN_BATCHES"} -- must match meta.xml <settings/>
 
 local modList = nil
 local playersWaitingQueue = {}
+local settings = {}
 
 local function endsWith(str, ending)
     return ending == '' or str:sub(-#ending) == ending
+end
+
+local function sendModListToPlayer(player)
+    triggerClientEvent(player, "modloader_reborn:loadMods", resourceRoot, modList, settings)
 end
 
 local function handlePlayerResourceStart(res)
@@ -17,7 +23,7 @@ local function handlePlayerResourceStart(res)
         playersWaitingQueue[source] = true
         return
     end
-    triggerClientEvent(source, "modloader_reborn:loadMods", resourceRoot, modList)
+    sendModListToPlayer(source)
 end
 addEventHandler("onPlayerResourceStart", root, handlePlayerResourceStart)
 
@@ -72,6 +78,16 @@ end
 
 local function prepareMods()
 
+    settings = {}
+    for _, settingName in pairs(SETTING_NAMES) do
+        local settingValue = get(settingName)
+        if not settingValue then
+            outputMsg("Setting value not set for: " .. settingName, 1)
+            return
+        end
+        settings[settingName] = settingValue
+    end
+
     if not pathIsDirectory(CONFIG_DIR_MODS) then
         outputMsg("Mods directory not found: " .. CONFIG_DIR_MODS, 1)
         return
@@ -82,9 +98,9 @@ local function prepareMods()
     for _, fileName in pairs(pathListDir(CONFIG_DIR_MODS) or {}) do
         parseModFile(fileName)
     end
-    
+
     for player, _ in pairs(playersWaitingQueue) do
-        triggerClientEvent(player, "modloader_reborn:loadMods", resourceRoot, modList)
+        sendModListToPlayer(player)
     end
     playersWaitingQueue = nil
 end

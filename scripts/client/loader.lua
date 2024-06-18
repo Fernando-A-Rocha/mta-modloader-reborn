@@ -2,10 +2,8 @@
 
 addEvent("modloader_reborn:loadMods", true)
 
-local AMOUNT_MODS_PER_BATCH = 10
-local TIME_MS_BETWEEN_BATCHES = 1000
-
 local modsToLoad = {}
+local settingsFromServer = {}
 local loaderCoroutine
 
 local function loadFile(filePath, loaderFunc)
@@ -45,7 +43,7 @@ local function processBatch()
         processMod(model, mod)
         modsToLoad[model] = nil
         loadedCounter = loadedCounter + 1
-        if loadedCounter >= AMOUNT_MODS_PER_BATCH then
+        if loadedCounter >= (settingsFromServer["*AMOUNT_MODS_PER_BATCH"]) then
             break
         end
     end
@@ -59,10 +57,9 @@ local function coroutineLoader()
         processBatch()
 
         if next(modsToLoad) then
-            outputMsg(("Waiting %d seconds to load next batch of mods..."):format(TIME_MS_BETWEEN_BATCHES / 1000), 3)
             repeat
                 coroutine.yield()
-            until getTickCount() - startTick >= TIME_MS_BETWEEN_BATCHES
+            until getTickCount() - startTick >= settingsFromServer["*TIME_MS_BETWEEN_BATCHES"]
         end
     end
 end
@@ -85,9 +82,11 @@ local function beginLoadingMods()
     addEventHandler("onClientRender", root, onClientRenderHandler)
 end
 
-local function loadMods(modList)
+local function loadMods(modList, settings)
     assert(type(modList) == "table", "Invalid argument #1 to 'loadMods' (table expected, got " .. type(modList) .. ")" )
+    assert(type(settings) == "table", "Invalid argument #2 to 'loadMods' (table expected, got " .. type(settings) .. ")" )
     modsToLoad = modList
+    settingsFromServer = settings
     beginLoadingMods()
 end
 addEventHandler("modloader_reborn:loadMods", resourceRoot, loadMods, false)
