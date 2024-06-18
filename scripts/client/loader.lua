@@ -2,46 +2,47 @@
 
 addEvent("modloader_reborn:loadMods", true)
 
-local AMOUNT_MODS_PER_BATCH = 2
+local AMOUNT_MODS_PER_BATCH = 10
 local TIME_MS_BETWEEN_BATCHES = 1000
 
 local modsToLoad = {}
+local loaderCoroutine
 
-local function beginLoadingMods()
+local function loadFile(filePath, loaderFunc)
+    if type(filePath) == "string" then
+        local fileHandle = fileOpen(filePath, true)
+        if fileHandle then
+            local fileContent = fileGetContents(fileHandle, true) -- Verifies checksum
+            fileClose(fileHandle)
+            if fileContent then
+                local element = loaderFunc(fileContent)
+                return element
+            end
+        end
+    end
+    return nil
+end
 
+local function processMod(model, mod)
+    assert(type(model) == "number", "Invalid mod model: " .. inspect(model))
+    assert(type(mod) == "table", "Invalid mod data: " .. inspect(mod))
+
+    local txdElement = loadFile(mod.txdPath, engineLoadTXD)
+    if txdElement then
+        engineImportTXD(txdElement, model)
+    end
+
+    local dffElement = loadFile(mod.dffPath, engineLoadDFF)
+    if dffElement then
+        engineReplaceModel(dffElement, model)
+    end
+end
+
+local function processBatch()
     local loadedCounter = 0
 
     for model, mod in pairs(modsToLoad) do
-        assert(type(model)=="number", "Invalid mod model: " .. inspect(model))
-        assert(type(mod)=="table", "Invalid mod data: " .. inspect(mod))
-        local txdPath = mod.txdPath
-        if type(txdPath) == "string" then
-            local fileHandle = fileOpen(txdPath, true)
-            if fileHandle then
-                local fileContent = fileGetContents(fileHandle, true) -- Verifies checksum
-                fileClose(fileHandle)
-                if fileContent then
-                    local txdElement = engineLoadTXD(fileContent)
-                    if txdElement then
-                        engineImportTXD(txdElement, model)
-                    end
-                end
-            end
-        end
-        local dffPath = mod.dffPath
-        if type(dffPath) == "string" then
-            local fileHandle = fileOpen(dffPath, true)
-            if fileHandle then
-                local fileContent = fileGetContents(fileHandle, true) -- Verifies checksum
-                fileClose(fileHandle)
-                if fileContent then
-                    local dffElement = engineLoadDFF(fileContent)
-                    if dffElement then
-                        engineReplaceModel(dffElement, model)
-                    end
-                end
-            end
-        end
+        processMod(model, mod)
         modsToLoad[model] = nil
         loadedCounter = loadedCounter + 1
         if loadedCounter >= AMOUNT_MODS_PER_BATCH then
@@ -49,16 +50,43 @@ local function beginLoadingMods()
         end
     end
 
-    outputMsg(("Replaced %d game models."):format(loadedCounter), 3)
+    outputMsg(("Loaded %d mods."):format(loadedCounter), 3)
+end
 
-    if next(modsToLoad) then
-        outputMsg(("Waiting %d seconds to load next batch of mods..."):format(TIME_MS_BETWEEN_BATCHES/1000), 3)
-        setTimer(beginLoadingMods, TIME_MS_BETWEEN_BATCHES, 1)
+local function coroutineLoader()
+    while next(modsToLoad) do
+        local startTick = getTickCount()
+        processBatch()
+
+        if next(modsToLoad) then
+            outputMsg(("Waiting %d seconds to load next batch of mods..."):format(TIME_MS_BETWEEN_BATCHES / 1000), 3)
+            repeat
+                coroutine.yield()
+            until getTickCount() - startTick >= TIME_MS_BETWEEN_BATCHES
+        end
     end
 end
 
+local function onClientRenderHandler()
+    if loaderCoroutine and coroutine.status(loaderCoroutine) == "suspended" then
+        local success, errorMsg = coroutine.resume(loaderCoroutine)
+        if not success then
+            removeEventHandler("onClientRender", root, onClientRenderHandler)
+            outputMsg(("Error in coroutine: %s"):format(errorMsg), 1)
+        end
+    elseif loaderCoroutine and coroutine.status(loaderCoroutine) == "dead" then
+        removeEventHandler("onClientRender", root, onClientRenderHandler)
+        outputMsg("Finished loading all mods.", 3)
+    end
+end
+
+local function beginLoadingMods()
+    loaderCoroutine = coroutine.create(coroutineLoader)
+    addEventHandler("onClientRender", root, onClientRenderHandler)
+end
+
 local function loadMods(modList)
-    assert(type(modList)=="table", "Invalid argument #1 to 'loadMods' (table expected, got " .. type(modList) .. ")" )
+    assert(type(modList) == "table", "Invalid argument #1 to 'loadMods' (table expected, got " .. type(modList) .. ")" )
     modsToLoad = modList
     beginLoadingMods()
 end

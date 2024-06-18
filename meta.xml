@@ -12,8 +12,6 @@
     <script src="scripts/server/*.lua" type="server"/>
     <script src="scripts/shared/*.lua" type="shared"/>
 
-    <file src="mods/README.txt"/>
-
     <file src="mods/*.dff"/>
     <file src="mods/*.txd"/>
 </meta>
