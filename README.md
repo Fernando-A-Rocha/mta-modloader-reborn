@@ -46,7 +46,9 @@ or
 - 264.dff
 - 264.txd
 
-## For developers
+## Scripting API
+
+This resource features a scripting API that allows you to interact with the modloader or get information about the loaded mods.
 
 - Clientside event:
 
