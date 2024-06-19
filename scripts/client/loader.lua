@@ -9,6 +9,7 @@ addEvent("modloader_reborn:client:onModLoaded", false)
 local modsToLoad = {}
 local settingsFromServer = {}
 local loaderCoroutine
+local modelsReplaced = {}
 
 local function loadFile(filePath, loaderFunc)
     if type(filePath) == "string" then
@@ -34,7 +35,7 @@ local function loadOneMod(model, mod)
         if not colElement then
             return false, "COL(load)"
         end
-        if not engineReplaceCOL(model, colElement) then
+        if not engineReplaceCOL(colElement, model) then
             return false, "COL(replace)"
         end
     end
@@ -59,6 +60,7 @@ local function loadOneMod(model, mod)
         end
     end
 
+    modelsReplaced[model] = true
     return true
 end
 
@@ -70,13 +72,27 @@ local function tableCount(tbl)
     return count
 end
 
+local function getModFiles(mod)
+    local modFiles = {}
+    if mod.colPath then
+        table.insert(modFiles, mod.colPath)
+    end
+    if mod.txdPath then
+        table.insert(modFiles, mod.txdPath)
+    end
+    if mod.dffPath then
+        table.insert(modFiles, mod.dffPath)
+    end
+    return modFiles
+end
+
 local function processBatch()
     local loadedCounter = 0
 
     for model, mod in pairs(modsToLoad) do
         local loadSuccess, whatFailed = loadOneMod(model, mod)
         if loadSuccess then
-            outputMsg(("Successfully loaded mod for model %d."):format(model), 3)
+            outputMsg(("Successfully loaded mod for model %d (%s)."):format(model, table.concat(getModFiles(mod), ", ")), 3)
         else
             outputMsg(("Failed to load %s for model %d."):format(whatFailed, model), 1)
         end
@@ -123,7 +139,16 @@ local function onClientRenderHandler()
     end
 end
 
+local function restoreReplacedModels()
+    for model, _ in pairs(modelsReplaced) do
+        engineRestoreModel(model)
+    end
+    modelsReplaced = {}
+end
+addEventHandler("onClientResourceStop", resourceRoot, restoreReplacedModels, false)
+
 local function beginLoadingMods()
+    restoreReplacedModels()
     loaderCoroutine = coroutine.create(coroutineLoader)
     addEventHandler("onClientRender", root, onClientRenderHandler)
 end

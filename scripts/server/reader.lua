@@ -52,9 +52,12 @@ local function parseModFile(fileName)
     else
         modelStr = modelStr:lower()
         if isCOL then
-            -- TODO
-            outputMsg("Not supported yet: " .. fileName, 2)
-            return
+            for model_, data in pairs(DATA_OBJECTS) do
+                if data.dff == modelStr then
+                    model = model_
+                    break
+                end
+            end
         else
             for model_, data in pairs(DATA_VEHICLES) do
                 if isDFF and data.dff == modelStr

@@ -18,6 +18,7 @@
     <script src="scripts/server/*.lua" type="server"/>
     <script src="scripts/shared/*.lua" type="shared"/>
 
-    <file src="mods/*.dff"/>
+    <file src="mods/*.col"/>
     <file src="mods/*.txd"/>
+    <file src="mods/*.dff"/>
 </meta>
