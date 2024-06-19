@@ -14,6 +14,8 @@ Simply drag and drop the modded DFF/TXD files into the mods folder. They will be
 
 ## Tutorial
 
+This script automatically matches the file names to the model IDs of the game. The files must be placed in the `mods` folder in the resource directory.
+
 - Vehicles
 
 Model IDs and game model names (dff & txd) are supported. [https://wiki.multitheftauto.com/wiki/Vehicle_IDs](https://wiki.multitheftauto.com/wiki/Vehicle_IDs)
@@ -22,7 +24,7 @@ Model IDs and game model names (dff & txd) are supported. [https://wiki.multithe
 
 Model IDs and game model names (dff & txd) are supported. [https://wiki.multitheftauto.com/wiki/All_Skins_Page](https://wiki.multitheftauto.com/wiki/All_Skins_Page)
 
-### Examples of valid mods
+## Examples of valid mods
   
 Replacing the Infernus (ID 411):
 
@@ -44,9 +46,9 @@ or
 - 264.dff
 - 264.txd
 
-### For developers
+## For developers
 
-- Clientside event `modloader_reborn:client:onModLoaded`
+- Clientside event:
 
 ```lua
 addEventHandler("modloader_reborn:client:onModLoaded", localPlayer,
