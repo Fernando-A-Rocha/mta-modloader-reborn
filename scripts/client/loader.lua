@@ -123,7 +123,7 @@ local function loadMods(modList, settings)
     assert(type(settings) == "table", "Invalid argument #2 to 'loadMods' (table expected, got " .. type(settings) .. ")" )
     modsToLoad = modList
     settingsFromServer = settings
-    outputSuccessMessages = settingsFromServer["*OUTPUT_SUCCESS_MESSAGES"]
+    outputSuccessMessages = settingsFromServer["*OUTPUT_SUCCESS_MESSAGES"] == true
     beginLoadingMods()
 end
 addEventHandler("modloader_reborn:client:loadMods", resourceRoot, loadMods, false)

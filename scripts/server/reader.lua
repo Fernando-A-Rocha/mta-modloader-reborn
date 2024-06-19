@@ -108,7 +108,7 @@ local function prepareMods()
         end
         settings[settingName] = settingValue
     end
-    outputSuccessMessages = settings["*OUTPUT_SUCCESS_MESSAGES"]
+    outputSuccessMessages = settings["*OUTPUT_SUCCESS_MESSAGES"] == true
 
     if not pathIsDirectory(CONFIG_DIR_MODS) then
         outputMsg("Mods directory not found: " .. CONFIG_DIR_MODS, 1)
