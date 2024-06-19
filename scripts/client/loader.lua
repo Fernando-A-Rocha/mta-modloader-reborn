@@ -29,6 +29,16 @@ local function loadOneMod(model, mod)
     assert(type(model) == "number", "Invalid mod model: " .. inspect(model))
     assert(type(mod) == "table", "Invalid mod data: " .. inspect(mod))
 
+    if mod.colPath then
+        local colElement = loadFile(mod.colPath, engineLoadCOL)
+        if not colElement then
+            return false, "COL(load)"
+        end
+        if not engineReplaceCOL(model, colElement) then
+            return false, "COL(replace)"
+        end
+    end
+
     if mod.txdPath then
         local txdElement = loadFile(mod.txdPath, engineLoadTXD)
         if not txdElement then

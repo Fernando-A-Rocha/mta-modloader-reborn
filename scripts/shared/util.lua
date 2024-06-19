@@ -3,5 +3,6 @@
 outputSuccessMessages = true
 function outputMsg(msg, level)
     if ((not level) or (level == 3)) and (not outputSuccessMessages) then return end
-    outputDebugString("["..getResourceName(resource).."] " .. msg, level)
+    local addPrefix = (not level) or (level == 3) or (level == 4)
+    outputDebugString((addPrefix and "["..getResourceName(resource).."] " or "") .. msg, level)
 end

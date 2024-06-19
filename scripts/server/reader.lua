@@ -53,6 +53,8 @@ local function parseModFile(fileName)
         modelStr = modelStr:lower()
         if isCOL then
             -- TODO
+            outputMsg("Not supported yet: " .. fileName, 2)
+            return
         else
             for model_, data in pairs(DATA_VEHICLES) do
                 if isDFF and data.dff == modelStr
@@ -82,7 +84,7 @@ local function parseModFile(fileName)
         end
     end
     if not model then
-        outputMsg("File name doesn't correspond to vehicle/skin model name/ID: " .. fileName, 2)
+        outputMsg("Could not find a model to apply: " .. fileName, 2)
         return
     end
     if not modList[model] then
