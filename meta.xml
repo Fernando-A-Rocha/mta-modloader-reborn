@@ -11,6 +11,7 @@
     <settings>
       <setting name="*AMOUNT_MODS_PER_BATCH" value="[10]" friendlyname="Amount of Mods per Batch" accept="positive number" desc="How many mods should be loaded together in batches?"/>
       <setting name="*TIME_MS_BETWEEN_BATCHES" value="[1000]" friendlyname="Time Between Batches (ms)" accept="positive number" desc="How many milliseconds should the script wait before loading the next batch of mods?"/>
+      <setting name="*OUTPUT_SUCCESS_MESSAGES" value="true" friendlyname="Show Success Debug-console Messages" accept="true,false" desc="Should the script show debug messages in the console when a mod is loaded successfully, for example?"/>
     </settings>
 
     <script src="scripts/client/*.lua" type="client"/>

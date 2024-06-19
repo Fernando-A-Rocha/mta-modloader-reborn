@@ -14,13 +14,13 @@ Simply drag and drop the modded DFF/TXD files into the mods folder. They will be
 
 ## Tutorial
 
-Vehicles: model IDs and game model names (dff & txd) are supported.
+- Vehicles
 
-[https://wiki.multitheftauto.com/wiki/Vehicle_IDs](https://wiki.multitheftauto.com/wiki/Vehicle_IDs)
+Model IDs and game model names (dff & txd) are supported. [https://wiki.multitheftauto.com/wiki/Vehicle_IDs](https://wiki.multitheftauto.com/wiki/Vehicle_IDs)
 
-Skins: model IDs and game model names (dff & txd) are supported.
+- Skins
 
-[https://wiki.multitheftauto.com/wiki/All_Skins_Page](https://wiki.multitheftauto.com/wiki/All_Skins_Page)
+Model IDs and game model names (dff & txd) are supported. [https://wiki.multitheftauto.com/wiki/All_Skins_Page](https://wiki.multitheftauto.com/wiki/All_Skins_Page)
 
 ### Examples of valid mods
   
@@ -43,3 +43,24 @@ or
 
 - 264.dff
 - 264.txd
+
+### For developers
+
+- Clientside event `modloader_reborn:client:onModLoaded`
+
+```lua
+addEventHandler("modloader_reborn:client:onModLoaded", localPlayer,
+    function(
+            model, -- MTA Model ID number
+            mod, -- Table containing mod information such as file paths
+            loadSuccess, -- Boolean indicating if the mod was loaded successfully
+            loadedCount, remainingCount -- Number of mods loaded and remaining
+        )
+        local progress = loadedCount / (loadedCount + remainingCount)
+        print("Mods loading progress: " .. math.floor(progress * 100) .. "%")
+        if progress == 1 then
+            print("All mods loaded.")
+        end
+    end,
+false)
+```

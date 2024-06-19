@@ -1,6 +1,10 @@
 -- Modloader Reborn by Nando (https://github.com/Fernando-A-Rocha/mta-modloader-reborn) [June 2024]
 
-addEvent("modloader_reborn:loadMods", true)
+-- Internal event
+addEvent("modloader_reborn:client:loadMods", true)
+
+-- For developers
+addEvent("modloader_reborn:client:onModLoaded", false)
 
 local modsToLoad = {}
 local settingsFromServer = {}
@@ -21,34 +25,66 @@ local function loadFile(filePath, loaderFunc)
     return nil
 end
 
-local function processMod(model, mod)
+local function loadOneMod(model, mod)
     assert(type(model) == "number", "Invalid mod model: " .. inspect(model))
     assert(type(mod) == "table", "Invalid mod data: " .. inspect(mod))
 
-    local txdElement = loadFile(mod.txdPath, engineLoadTXD)
-    if txdElement then
-        engineImportTXD(txdElement, model)
+    if mod.txdPath then
+        local txdElement = loadFile(mod.txdPath, engineLoadTXD)
+        if not txdElement then
+            return false, "TXD(load)"
+        end
+        if not engineImportTXD(txdElement, model) then
+            return false, "TXD(import)"
+        end
     end
 
-    local dffElement = loadFile(mod.dffPath, engineLoadDFF)
-    if dffElement then
-        engineReplaceModel(dffElement, model)
+    if mod.dffPath then
+        local dffElement = loadFile(mod.dffPath, engineLoadDFF)
+        if not dffElement then
+            return false, "DFF(load)"
+        end
+        if not engineReplaceModel(dffElement, model) then
+            return false, "DFF(replace)"
+        end
     end
+
+    return true
+end
+
+local function tableCount(tbl)
+    local count = 0
+    for _ in pairs(tbl) do
+        count = count + 1
+    end
+    return count
 end
 
 local function processBatch()
     local loadedCounter = 0
 
     for model, mod in pairs(modsToLoad) do
-        processMod(model, mod)
-        modsToLoad[model] = nil
+        local loadSuccess, whatFailed = loadOneMod(model, mod)
+        if loadSuccess then
+            outputMsg(("Successfully loaded mod for model %d."):format(model), 3)
+        else
+            outputMsg(("Failed to load %s for model %d."):format(whatFailed, model), 1)
+        end
         loadedCounter = loadedCounter + 1
+        local remainingCounter = tableCount(modsToLoad) - 1
+
+        triggerEvent("modloader_reborn:client:onModLoaded", localPlayer,
+            model, mod,
+            loadSuccess,
+            loadedCounter, remainingCounter
+        )
+
+        modsToLoad[model] = nil
         if loadedCounter >= (settingsFromServer["*AMOUNT_MODS_PER_BATCH"]) then
             break
         end
     end
-
-    outputMsg(("Loaded %d mods."):format(loadedCounter), 3)
+    outputMsg(("Loaded %d mods in one batch."):format(loadedCounter), 3)
 end
 
 local function coroutineLoader()
@@ -87,6 +123,7 @@ local function loadMods(modList, settings)
     assert(type(settings) == "table", "Invalid argument #2 to 'loadMods' (table expected, got " .. type(settings) .. ")" )
     modsToLoad = modList
     settingsFromServer = settings
+    outputSuccessMessages = settingsFromServer["*OUTPUT_SUCCESS_MESSAGES"]
     beginLoadingMods()
 end
-addEventHandler("modloader_reborn:loadMods", resourceRoot, loadMods, false)
+addEventHandler("modloader_reborn:client:loadMods", resourceRoot, loadMods, false)
