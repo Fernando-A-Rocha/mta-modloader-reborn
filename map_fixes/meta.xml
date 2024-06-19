@@ -1,0 +1,8 @@
+<meta>
+    <include resource="modloader_reborn"/>
+    <script src="server.lua" type="server"/>
+
+    <file src="files/**/*.col"/>
+    <file src="files/**/*.txd"/>
+    <file src="files/**/*.dff"/>
+</meta>

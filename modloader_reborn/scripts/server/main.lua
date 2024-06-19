@@ -3,29 +3,75 @@
 local CONFIG_DIR_MODS = "mods"
 local SETTING_NAMES = {"*AMOUNT_MODS_PER_BATCH", "*TIME_MS_BETWEEN_BATCHES", "*OUTPUT_SUCCESS_MESSAGES"} -- must match meta.xml <settings/>
 
-local modList = nil
+modList = {}
+
+local startupLoading = true
 local playersWaitingQueue = {}
+local clientsReady = {}
 local settings = {}
+
+for _, settingName in pairs(SETTING_NAMES) do
+    local settingValue = get(settingName)
+    if not settingValue then
+        outputMsg("Setting value not set for: " .. settingName, 1)
+        return
+    end
+    settings[settingName] = settingValue
+end
+outputSuccessMessages = settings["*OUTPUT_SUCCESS_MESSAGES"] == "true"
 
 local function endsWith(str, ending)
     return ending == '' or str:sub(-#ending) == ending
 end
 
-local function sendModListToPlayer(player)
-    triggerClientEvent(player, "modloader_reborn:client:loadMods", resourceRoot, modList, settings)
+local function loadOneModForPlayer(player, model, mod)
+    if startupLoading then
+        return
+    end
+    triggerClientEvent(player, "modloader_reborn:client:loadOneMod", resourceRoot, model, mod)
+end
+
+function loadOneModForReadyPlayers(model, mod)
+    for player, _ in pairs(clientsReady) do
+        loadOneModForPlayer(player, model, mod)
+    end
+end
+
+local function unloadOneModForPlayer(player, model)
+    if startupLoading then
+        return
+    end
+    triggerClientEvent(player, "modloader_reborn:client:unloadOneMod", resourceRoot, model)
+end
+
+function unloadOneModForReadyPlayers(model)
+    for player, _ in pairs(clientsReady) do
+        unloadOneModForPlayer(player, model)
+    end
+end
+
+local function loadAllModsForPlayer(player)
+    triggerClientEvent(player, "modloader_reborn:client:loadMods", resourceRoot, modList)
 end
 
 local function handlePlayerResourceStart(res)
     if res ~= resource then
         return
     end
-    if not modList then
+    triggerClientEvent(source, "modloader_reborn:client:applySettings", resourceRoot, settings)
+    clientsReady[source] = true
+    if startupLoading then
         playersWaitingQueue[source] = true
         return
     end
-    sendModListToPlayer(source)
+    loadAllModsForPlayer(source)
 end
 addEventHandler("onPlayerResourceStart", root, handlePlayerResourceStart)
+
+addEventHandler("onPlayerQuit", root, function()
+    clientsReady[source] = nil
+    playersWaitingQueue[source] = nil
+end)
 
 local function parseModFile(fileName)
     local realFilePath = string.format("%s/%s", CONFIG_DIR_MODS, fileName)
@@ -93,42 +139,29 @@ local function parseModFile(fileName)
     if not modList[model] then
         modList[model] = {}
     end
-    if isDFF then
-        modList[model].dffPath = realFilePath
+    if isCOL then
+        modList[model].colPath = realFilePath
     elseif isTXD then
         modList[model].txdPath = realFilePath
-    elseif isCOL then
-        modList[model].colPath = realFilePath
+    elseif isDFF then
+        modList[model].dffPath = realFilePath
     end
 end
 
 local function prepareMods()
-
-    settings = {}
-    for _, settingName in pairs(SETTING_NAMES) do
-        local settingValue = get(settingName)
-        if not settingValue then
-            outputMsg("Setting value not set for: " .. settingName, 1)
-            return
-        end
-        settings[settingName] = settingValue
-    end
-    outputSuccessMessages = settings["*OUTPUT_SUCCESS_MESSAGES"] == "true"
-
     if not pathIsDirectory(CONFIG_DIR_MODS) then
         outputMsg("Mods directory not found: " .. CONFIG_DIR_MODS, 1)
         return
     end
-
-    modList = {}
 
     for _, fileName in pairs(pathListDir(CONFIG_DIR_MODS) or {}) do
         parseModFile(fileName)
     end
 
     for player, _ in pairs(playersWaitingQueue) do
-        sendModListToPlayer(player)
+        loadAllModsForPlayer(player)
     end
     playersWaitingQueue = nil
+    startupLoading = nil
 end
 addEventHandler("onResourceStart", resourceRoot, prepareMods, false)

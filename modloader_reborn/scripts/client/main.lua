@@ -1,7 +1,10 @@
 -- Modloader Reborn by Nando (https://github.com/Fernando-A-Rocha/mta-modloader-reborn) [June 2024]
 
--- Internal event
+-- Internal events
+addEvent("modloader_reborn:client:applySettings", true)
 addEvent("modloader_reborn:client:loadMods", true)
+addEvent("modloader_reborn:client:loadOneMod", true)
+addEvent("modloader_reborn:client:unloadOneMod", true)
 
 local modsToLoad = {}
 local loaderCoroutine
@@ -24,7 +27,7 @@ local function loadFile(filePath, loaderFunc)
     return nil
 end
 
-local function loadOneMod(model, mod)
+local function processMod(model, mod)
     assert(type(model) == "number", "Invalid mod model: " .. inspect(model))
     assert(type(mod) == "table", "Invalid mod data: " .. inspect(mod))
 
@@ -88,7 +91,7 @@ local function processBatch()
     local loadedCounter = 0
 
     for model, mod in pairs(modsToLoad) do
-        local loadSuccess, whatFailed = loadOneMod(model, mod)
+        local loadSuccess, whatFailed = processMod(model, mod)
         if loadSuccess then
             outputMsg(("Successfully loaded mod for model %d (%s)."):format(model, table.concat(getModFiles(mod), ", ")), 3)
         else
@@ -133,30 +136,56 @@ local function onClientRenderHandler()
         end
     elseif loaderCoroutine and coroutine.status(loaderCoroutine) == "dead" then
         removeEventHandler("onClientRender", root, onClientRenderHandler)
-        outputMsg("Finished loading all mods.", 3)
+        outputMsg("Finished loading all queued mods.", 3)
+    end
+end
+
+local function restoreOneModel(model)
+    if modelsReplaced[model] then
+        engineRestoreModel(model)
+        modelsReplaced[model] = nil
     end
 end
 
 local function restoreReplacedModels()
     for model, _ in pairs(modelsReplaced) do
-        engineRestoreModel(model)
+        restoreOneModel(model)
     end
     modelsReplaced = {}
 end
 addEventHandler("onClientResourceStop", resourceRoot, restoreReplacedModels, false)
 
 local function beginLoadingMods()
-    restoreReplacedModels()
     loaderCoroutine = coroutine.create(coroutineLoader)
     addEventHandler("onClientRender", root, onClientRenderHandler)
 end
 
-local function loadMods(modList, settings)
-    assert(type(modList) == "table", "Invalid argument #1 to 'loadMods' (table expected, got " .. type(modList) .. ")" )
-    assert(type(settings) == "table", "Invalid argument #2 to 'loadMods' (table expected, got " .. type(settings) .. ")" )
-    modsToLoad = modList
+local function applySettingsFromServer(settings)
+    assert(type(settings) == "table", "Invalid argument #1 to 'applySettingsFromServer' (table expected, got " .. type(settings) .. ")" )
     settingsFromServer = settings
     outputSuccessMessages = settingsFromServer["*OUTPUT_SUCCESS_MESSAGES"] == "true"
+end
+addEventHandler("modloader_reborn:client:applySettings", resourceRoot, applySettingsFromServer, false)
+
+local function loadMods(modList)
+    assert(type(modList) == "table", "Invalid argument #1 to 'loadMods' (table expected, got " .. type(modList) .. ")" )
+    modsToLoad = modList
     beginLoadingMods()
 end
 addEventHandler("modloader_reborn:client:loadMods", resourceRoot, loadMods, false)
+
+local function loadOneMod(model, mod)
+    assert(type(model) == "number", "Invalid argument #1 to 'loadOneMod' (number expected, got " .. type(model) .. ")" )
+    assert(type(mod) == "table", "Invalid argument #2 to 'loadOneMod' (table expected, got " .. type(mod) .. ")" )
+    modsToLoad[model] = mod
+    if not loaderCoroutine or coroutine.status(loaderCoroutine) == "dead" then
+        beginLoadingMods()
+    end
+end
+addEventHandler("modloader_reborn:client:loadOneMod", resourceRoot, loadOneMod, false)
+
+local function unloadOneMod(model)
+    assert(type(model) == "number", "Invalid argument #1 to 'unloadOneMod' (number expected, got " .. type(model) .. ")" )
+    restoreOneModel(model)
+end
+addEventHandler("modloader_reborn:client:unloadOneMod", resourceRoot, unloadOneMod, false)

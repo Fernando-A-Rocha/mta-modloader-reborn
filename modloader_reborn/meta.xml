@@ -17,12 +17,14 @@
       <setting name="*OUTPUT_SUCCESS_MESSAGES" value="true" friendlyname="Show Success Debug Messages" accept="true,false" desc="Should the script show debug messages in the console when a mod is loaded successfully, for example?"/>
     </settings>
 
+    <script src="scripts/shared/*.lua" type="shared"/>
     <script src="scripts/client/*.lua" type="client"/>
     <script src="scripts/server/*.lua" type="server"/>
-    <script src="scripts/shared/*.lua" type="shared"/>
 
     <!-- Scripting functions for developers -->
     <export function="getModLoadedForModel" type="client"/>
+    <export function="importModForModel" type="server"/>
+    <export function="removeModForModel" type="server"/>
 
     <!-- Auto-detected mod files -->
     <file src="mods/*.col"/>
