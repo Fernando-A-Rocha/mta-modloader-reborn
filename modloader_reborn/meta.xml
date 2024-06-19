@@ -8,6 +8,9 @@
       https://nightly.mtasa.com  -->
     <min_mta_version client="1.6.0-9.22505.0" server="1.6.0-9.22505.0"></min_mta_version>
 
+    <!-- Make the resource start earlier for clients -->
+    <download_priority_group>999</download_priority_group>
+
     <settings>
       <setting name="*AMOUNT_MODS_PER_BATCH" value="[10]" friendlyname="Amount of Mods per Batch" accept="positive number" desc="How many mods should be loaded together in batches?"/>
       <setting name="*TIME_MS_BETWEEN_BATCHES" value="[1000]" friendlyname="Time Between Batches (ms)" accept="positive number" desc="How many milliseconds should the script wait before loading the next batch of mods?"/>
@@ -18,6 +21,10 @@
     <script src="scripts/server/*.lua" type="server"/>
     <script src="scripts/shared/*.lua" type="shared"/>
 
+    <!-- Scripting functions for developers -->
+    <export function="getModLoadedForModel" type="client"/>
+
+    <!-- Auto-detected mod files -->
     <file src="mods/*.col"/>
     <file src="mods/*.txd"/>
     <file src="mods/*.dff"/>

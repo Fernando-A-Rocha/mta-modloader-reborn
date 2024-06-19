@@ -50,7 +50,7 @@ or
 
 This resource features a scripting API that allows you to interact with the modloader or get information about the loaded mods.
 
-- Clientside event:
+### Clientside Events
 
 ```lua
 addEventHandler("modloader_reborn:client:onModLoaded", localPlayer,
@@ -67,4 +67,18 @@ addEventHandler("modloader_reborn:client:onModLoaded", localPlayer,
         end
     end,
 false)
+```
+
+### Clientside Functions
+
+```lua
+local mod = getModLoadedForModel(model)
+if mod then
+    print(("Mod loaded for model %d: %s"):format(
+        model,
+        (mod.dffPath and mod.dffPath or "") .. " " .. (mod.txdPath and mod.txdPath or "") .. " " .. (mod.colPath and mod.colPath or "")
+    ))
+else
+    print(("No mod loaded for model %d"):format(model))
+end
 ```

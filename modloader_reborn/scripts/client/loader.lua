@@ -3,13 +3,11 @@
 -- Internal event
 addEvent("modloader_reborn:client:loadMods", true)
 
--- For developers
-addEvent("modloader_reborn:client:onModLoaded", false)
-
 local modsToLoad = {}
-local settingsFromServer = {}
 local loaderCoroutine
-local modelsReplaced = {}
+
+settingsFromServer = {}
+modelsReplaced = {}
 
 local function loadFile(filePath, loaderFunc)
     if type(filePath) == "string" then
@@ -60,7 +58,7 @@ local function loadOneMod(model, mod)
         end
     end
 
-    modelsReplaced[model] = true
+    modelsReplaced[model] = mod
     return true
 end
 
@@ -99,7 +97,7 @@ local function processBatch()
         loadedCounter = loadedCounter + 1
         local remainingCounter = tableCount(modsToLoad) - 1
 
-        triggerEvent("modloader_reborn:client:onModLoaded", localPlayer,
+        apiInformModLoaded(
             model, mod,
             loadSuccess,
             loadedCounter, remainingCounter
