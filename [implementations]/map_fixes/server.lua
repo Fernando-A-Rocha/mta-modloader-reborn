@@ -11,13 +11,13 @@
 local resourceName = getResourceName(resource)
 local modloaderResourceName = "modloader_reborn"
 
-local MAP_FIXES = {
+local MODEL_FIXES = {
     -- ID, TXD, DFF, COL, Name(optional), Author(optional)
     {12887, false, false, "cunte_roads50.col", "Palomino Red Bridge Fix"},
 }
 
-addEventHandler("onResourceStart", resourceRoot, function()
-    for _, data in pairs(MAP_FIXES) do
+local function loadModelFixes()
+    for _, data in pairs(MODEL_FIXES) do
         local modelId = data[1]
         local txdPath = data[2] and (":".. resourceName .. "/files/".. data[2]) or nil
         local dffPath = data[3] and (":".. resourceName .. "/files/".. data[3]) or nil
@@ -33,10 +33,18 @@ addEventHandler("onResourceStart", resourceRoot, function()
             author = author
         })
     end
-end)
-addEventHandler("onResourceStop", resourceRoot, function()
-    for _, data in pairs(MAP_FIXES) do
+end
+
+local function unloadModelFixes()
+    for _, data in pairs(MODEL_FIXES) do
         local modelId = data[1]
         exports[modloaderResourceName]:removeModForModel(modelId)
     end
+end
+
+addEventHandler("onResourceStart", resourceRoot, function()
+    loadModelFixes()
+end)
+addEventHandler("onResourceStop", resourceRoot, function()
+    unloadModelFixes()
 end, false)
