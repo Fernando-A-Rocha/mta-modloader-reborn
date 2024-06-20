@@ -1,7 +1,12 @@
 -- Modloader Reborn by Nando (https://github.com/Fernando-A-Rocha/mta-modloader-reborn) [June 2024]
 
 local CONFIG_DIR_MODS = "mods"
-local SETTING_NAMES = {"*AMOUNT_MODS_PER_BATCH", "*TIME_MS_BETWEEN_BATCHES", "*OUTPUT_SUCCESS_MESSAGES"} -- must match meta.xml <settings/>
+
+-- must match meta.xml <settings/> names
+local SETTING_NAMES = {
+    "*AMOUNT_MODS_PER_BATCH", "*TIME_MS_BETWEEN_BATCHES", "*OUTPUT_SUCCESS_MESSAGES",
+    "*WARN_FILE_SIZE_ABOVE_DFF", "*WARN_FILE_SIZE_ABOVE_COL", "*WARN_FILE_SIZE_ABOVE_TXD"
+} 
 
 modList = {}
 settings = {}
@@ -17,6 +22,10 @@ for _, settingName in pairs(SETTING_NAMES) do
         return
     end
     settings[settingName] = settingValue
+end
+
+function outputLogMsg(msg)
+    outputServerLog("["..resourceName.."] " .. tostring(msg))
 end
 
 local function endsWith(str, ending)
@@ -64,7 +73,7 @@ local function handlePlayerResourceStart(res)
     clientsReady[source] = true
 
     sendSettingsToPlayer(source)
-    
+
     if startupLoading then
         playersWaitingQueue[source] = true
         return
@@ -78,6 +87,35 @@ addEventHandler("onPlayerQuit", root, function()
     playersWaitingQueue[source] = nil
 end)
 
+function checkFileAboveSizeThreshold(filePath)
+    local file = fileOpen(filePath, true)
+    if not file then
+        outputMsg("Could not open file: " .. filePath, 1)
+        return false
+    end
+    local fileSize = fileGetSize(file)
+    fileClose(file)
+    if not fileSize then
+        outputMsg("Could not get file size: " .. filePath, 1)
+        return false
+    end
+    local isDFF = endsWith(filePath, ".dff")
+    local isCOL = endsWith(filePath, ".col")
+    local isTXD = endsWith(filePath, ".txd")
+    local warnSize = 0
+    if isDFF then
+        warnSize = tonumber(settings["*WARN_FILE_SIZE_ABOVE_DFF"]) or 0
+    elseif isCOL then
+        warnSize = tonumber(settings["*WARN_FILE_SIZE_ABOVE_COL"]) or 0
+    elseif isTXD then
+        warnSize = tonumber(settings["*WARN_FILE_SIZE_ABOVE_TXD"]) or 0
+    end
+    if warnSize > 0 and fileSize > (warnSize * 1024) then
+        local fileExtension = string.upper(string.sub(filePath, -3))
+        outputLogMsg(fileExtension.." file is above warning threshold ("..(("%.2f kB"):format(warnSize)).."): " .. filePath .. " ("..(("%.2f kB"):format(fileSize/1024))..")")
+    end
+end
+
 local function parseModFile(fileName)
     local realFilePath = string.format("%s/%s", CONFIG_DIR_MODS, fileName)
     if not pathIsFile(realFilePath) then
@@ -89,6 +127,9 @@ local function parseModFile(fileName)
     if not (isDFF or isTXD or isCOL) then
         return
     end
+    
+    checkFileAboveSizeThreshold(realFilePath)
+
     local modelStr = string.sub(fileName, 1, -5)
     local model
     if tonumber(modelStr) then

@@ -107,7 +107,7 @@ local function processBatch()
         )
 
         modsToLoad[model] = nil
-        if loadedCounter >= (settings["*AMOUNT_MODS_PER_BATCH"]) then
+        if loadedCounter >= (tonumber(settings["*AMOUNT_MODS_PER_BATCH"]) or 10) then
             break
         end
     end
@@ -122,7 +122,7 @@ local function coroutineLoader()
         if next(modsToLoad) then
             repeat
                 coroutine.yield()
-            until getTickCount() - startTick >= settings["*TIME_MS_BETWEEN_BATCHES"]
+            until getTickCount() - startTick >= (tonumber(settings["*TIME_MS_BETWEEN_BATCHES"]) or 1000)
         end
     end
 end

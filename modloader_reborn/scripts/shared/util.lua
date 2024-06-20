@@ -5,5 +5,5 @@ resourceName = getResourceName(resource)
 function outputMsg(msg, level)
     if ((not level) or (level == 3)) and (settings["*OUTPUT_SUCCESS_MESSAGES"] ~= "true") then return end
     local addPrefix = (not level) or (level == 3) or (level == 4)
-    outputDebugString((addPrefix and "["..getResourceName(resource).."] " or "") .. msg, level)
+    outputDebugString((addPrefix and "["..resourceName.."] " or "") .. tostring(msg), level)
 end

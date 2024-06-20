@@ -25,6 +25,7 @@ API.SetModForModel = function(model, mod)
                 outputMsg(("Mod file %does not exist: %s"):format(realFilePath), 1)
                 return false
             end
+            checkFileAboveSizeThreshold(realFilePath)
             modList[model][pathType] = realFilePath
         end
     end
