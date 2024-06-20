@@ -52,7 +52,7 @@ This resource features a scripting API that allows you to interact with the modl
 
 ### Clientside Events
 
-- `modloader_reborn:client:onModLoaded` | *Source*: always **localPlayer**
+- `"modloader_reborn:client:onModLoaded"` | *Source*: always **localPlayer**
 
 ```lua
 -- Event is triggered when a mod is loaded
@@ -106,3 +106,13 @@ for model, mod in pairs(mods) do
     ))
 end
 ```
+
+### Serverside Functions
+
+- `bool setModForModel(number model, table mod)`
+
+See [map_fixes/server.lua](/[implementations]/map_fixes/server.lua) for example usage.
+
+- `bool removeModForModel(number model)`
+
+See [map_fixes/server.lua](/[implementations]/map_fixes/server.lua) for example usage.
