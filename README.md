@@ -6,7 +6,7 @@ Simply drag and drop the modded DFF/TXD files into the mods folder. They will be
 
 **Security feature**: Only files provided by the server are loaded, meaning that if the user adds random files to the mods directory in their resource cache, they won't be recognized and loaded.
 
-**Supported models**: Currently the script will automatically replace vehicle and skin models via their ID or model name according to GTA:SA.
+**Supported models**: Currently the script will automatically replace vehicle, skin and object models via their ID or model name according to GTA:SA. Read the tutorial below.
 
 ## Download
 
@@ -28,9 +28,9 @@ Model IDs and game model names (dff & txd) are supported. [https://wiki.multithe
 
 Model IDs and game model names (dff, col and txd) are supported. [https://dev.prineside.com/gtasa_samp_model_id/](https://dev.prineside.com/gtasa_samp_model_id/)
 
-FYI: To replace a model's collision, give the .col file the exact same name as the .dff (model name).
-
 Texture file names usually vary, and the same .txd can be reused for multiple models in GTA:SA.
+
+To replace a model's collision, give the .col file the exact same name as the .dff (model name).
 
 ⚠️ Please note that GTA:SA has COL files that are used as **containers of multiple model collisions**. MTA will only load single-collision COL files. If you want to extract collisions into their own files use a tool like [CollEditor2](https://www.google.com/search?q=gta+sa+CollEditor2). Select a collision and right click - Export selected.
 
