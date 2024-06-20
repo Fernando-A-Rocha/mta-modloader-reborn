@@ -14,7 +14,7 @@ Simply drag and drop the modded DFF/TXD files into the mods folder. They will be
 
 ## Video
 
-**Getting Started** video coming soon. I know it's easier to understand with a visual guide.
+📽️ **Getting Started** video coming soon. I know it's easier to understand with a visual guide.
 
 ## Tutorial
 
