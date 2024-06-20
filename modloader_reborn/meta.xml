@@ -15,7 +15,7 @@
       <setting name="*AMOUNT_MODS_PER_BATCH" value="[10]" friendlyname="Amount of Mods per Batch" accept="positive number" desc="How many mods should be loaded together in batches?"/>
       <setting name="*TIME_MS_BETWEEN_BATCHES" value="[1000]" friendlyname="Time Between Batches (ms)" accept="positive number" desc="How many milliseconds should the script wait before loading the next batch of mods?"/>
       <setting name="*OUTPUT_SUCCESS_MESSAGES" value="true" friendlyname="Show Success Debug Messages" accept="true,false" desc="Should the script show debug messages in the console when a mod is loaded successfully, for example?"/>
-      <setting name="*WARN_FILE_SIZE_ABOVE_DFF" value="[100]" friendlyname="Warn About High DFF Filesize" desc="Should the script warn the server when a DFF file is above X kilobytes (1024 kB = 1 MB)?"/>
+      <setting name="*WARN_FILE_SIZE_ABOVE_DFF" value="[1000]" friendlyname="Warn About High DFF Filesize" desc="Should the script warn the server when a DFF file is above X kilobytes (1024 kB = 1 MB)?"/>
       <setting name="*WARN_FILE_SIZE_ABOVE_COL" value="[50]" friendlyname="Warn About High COL Filesize" desc="Should the script warn the server when a COL file is above X kilobytes (1024 kB = 1 MB)?"/>
       <setting name="*WARN_FILE_SIZE_ABOVE_TXD" value="[1500]" friendlyname="Warn About High TXD Filesize" desc="Should the script warn the server when a TXD file is above X kilobytes (1024 kB = 1 MB)?"/>
     </settings>
