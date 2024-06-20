@@ -22,9 +22,12 @@
     <script src="scripts/server/*.lua" type="server"/>
 
     <!-- Scripting functions for developers -->
-    <export function="getModLoadedForModel" type="client"/>
-    <export function="importModForModel" type="server"/>
-    <export function="removeModForModel" type="server"/>
+    <!-- CLIENT -->
+      <export function="getModLoadedForModel" type="client"/>
+      <export function="getModsLoaded" type="client"/>
+    <!-- SERVER -->
+      <export function="setModForModel" type="server"/>
+      <export function="removeModForModel" type="server"/>
 
     <!-- Auto-detected mod files -->
     <file src="mods/*.col"/>

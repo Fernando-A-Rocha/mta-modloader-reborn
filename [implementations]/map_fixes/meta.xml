@@ -1,4 +1,5 @@
 <meta>
+    <info author="MTA contributors (github.com/multitheftauto/mtasa-resources)" version="1.0.0" type="script" description="SA Map Fixes"/>
     <include resource="modloader_reborn"/>
     <script src="server.lua" type="server"/>
 

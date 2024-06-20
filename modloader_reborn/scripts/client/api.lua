@@ -3,13 +3,20 @@
 -- For developers
 addEvent("modloader_reborn:client:onModLoaded", false)
 
-function apiGetModLoadedForModel(model)
+API = {}
+
+API.GetModLoadedForModel = function(model)
     return modelsReplaced[model]
 end
 
-function apiInformModLoaded(...)
+API.GetModsLoaded = function()
+    return modelsReplaced
+end
+
+API.InformModLoaded = function(...)
     triggerEvent("modloader_reborn:client:onModLoaded", localPlayer, ...)
 end
 
 -- Exported functions
-getModLoadedForModel = apiGetModLoadedForModel
+getModLoadedForModel = API.GetModLoadedForModel
+getModsLoaded = API.GetModsLoaded

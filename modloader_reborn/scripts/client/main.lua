@@ -6,11 +6,11 @@ addEvent("modloader_reborn:client:loadMods", true)
 addEvent("modloader_reborn:client:loadOneMod", true)
 addEvent("modloader_reborn:client:unloadOneMod", true)
 
-local modsToLoad = {}
-local loaderCoroutine
-
 settingsFromServer = {}
 modelsReplaced = {}
+
+local modsToLoad = {}
+local loaderCoroutine
 
 local function loadFile(filePath, loaderFunc)
     if type(filePath) == "string" then
@@ -100,7 +100,7 @@ local function processBatch()
         loadedCounter = loadedCounter + 1
         local remainingCounter = tableCount(modsToLoad) - 1
 
-        apiInformModLoaded(
+        API.InformModLoaded(
             model, mod,
             loadSuccess,
             loadedCounter, remainingCounter

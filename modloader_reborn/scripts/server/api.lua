@@ -1,6 +1,8 @@
 -- Modloader Reborn by Nando (https://github.com/Fernando-A-Rocha/mta-modloader-reborn) [June 2024]
 
-function apiImportModForModel(model, mod)
+API = {}
+
+API.SetModForModel = function(model, mod)
     assert(type(model) == "number", "Model must be a number")
     assert(type(mod) == "table", "Mod must be a table")
     if modList[model] then
@@ -31,12 +33,18 @@ function apiImportModForModel(model, mod)
         modList[model] = nil
         return false
     end
+    if type(mod.name) == "string" then
+        modList[model].name = mod.name
+    end
+    if type(mod.author) == "string" then
+        modList[model].author = mod.author
+    end
     outputMsg(("Model %d has been assigned a mod"):format(model), 3)
     loadOneModForReadyPlayers(model, modList[model])
     return true
 end
 
-function apiRemoveModForModel(model)
+API.RemoveModForModel = function(model)
     assert(type(model) == "number", "Model must be a number")
     if not modList[model] then
         outputMsg(("Model %d does not have a mod assigned"):format(model), 1)
@@ -49,5 +57,5 @@ function apiRemoveModForModel(model)
 end
 
 -- Exported functions
-importModForModel = apiImportModForModel
-removeModForModel = apiRemoveModForModel
+setModForModel = API.SetModForModel
+removeModForModel = API.RemoveModForModel

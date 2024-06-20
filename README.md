@@ -55,6 +55,8 @@ This resource features a scripting API that allows you to interact with the modl
 - `modloader_reborn:client:onModLoaded` | *Source*: always **localPlayer**
 
 ```lua
+-- Event is triggered when a mod is loaded
+-- (if it failed for some reason, the variable loadSuccess will be false)
 addEventHandler("modloader_reborn:client:onModLoaded", localPlayer,
     function(
             model, -- MTA Model ID number
@@ -76,6 +78,7 @@ false)
 - `table / nil getModLoadedForModel(number model)`
 
 ```lua
+-- Returns the mod loaded for a specific model ID
 local mod = getModLoadedForModel(model)
 if mod then
     print(("Mod loaded for model %d: %s"):format(
@@ -86,5 +89,20 @@ if mod then
     ))
 else
     print(("No mod loaded for model %d"):format(model))
+end
+```
+
+- `table getModsLoaded()`
+
+```lua
+-- Returns a table containing all the mods loaded
+local mods = getModsLoaded()
+for model, mod in pairs(mods) do
+    print(("Mod loaded for model %d: %s"):format(
+        model,
+        (mod.dffPath and (mod.dffPath .. " ") or "")
+        .. (mod.txdPath and (mod.txdPath .. " ") or "")
+        .. (mod.colPath and (mod.colPath) or "")
+    ))
 end
 ```
