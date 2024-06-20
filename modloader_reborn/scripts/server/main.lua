@@ -88,17 +88,29 @@ addEventHandler("onPlayerQuit", root, function()
 end)
 
 function checkFileAboveSizeThreshold(filePath)
+    -- Check if file path belongs to a different resource
+    if filePath:sub(1, 1) == ":" then
+        local resourcePath = filePath:match("^:(.-)/")
+        if resourcePath and getResourceFromName(resourcePath) ~= resource then
+            if not hasObjectPermissionTo(resource, "general.ModifyOtherObjects") then
+                outputMsg("checkFileAboveSizeThreshold cannot proceed: file path belongs to a different resource, and ModifyOtherObjects is not granted: " .. filePath, 2)
+                return
+            end
+        end
+    end
+
     local file = fileOpen(filePath, true)
     if not file then
         outputMsg("Could not open file: " .. filePath, 1)
-        return false
+        return
     end
     local fileSize = fileGetSize(file)
     fileClose(file)
     if not fileSize then
         outputMsg("Could not get file size: " .. filePath, 1)
-        return false
+        return
     end
+
     local isDFF = endsWith(filePath, ".dff")
     local isCOL = endsWith(filePath, ".col")
     local isTXD = endsWith(filePath, ".txd")

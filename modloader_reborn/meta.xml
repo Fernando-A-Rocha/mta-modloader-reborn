@@ -36,4 +36,9 @@
     <file src="mods/*.col"/>
     <file src="mods/*.txd"/>
     <file src="mods/*.dff"/>
+
+    <!-- ACL permissions that this resource requires -->
+    <aclrequest>
+        <right name="general.ModifyOtherObjects" access="true" />
+    </aclrequest>
 </meta>

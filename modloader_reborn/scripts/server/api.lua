@@ -6,7 +6,7 @@ API.SetModForModel = function(model, mod)
     assert(type(model) == "number", "Model must be a number")
     assert(type(mod) == "table", "Mod must be a table")
     if modList[model] then
-        outputMsg(("Model %d already has a mod assigned"):format(model), 1)
+        outputMsg(("Model %d already has a mod assigned"):format(model), 2)
         return false
     end
     if not DATA_VEHICLES[model] and not DATA_SKINS[model] and not DATA_OBJECTS[model] then
@@ -48,7 +48,7 @@ end
 API.RemoveModForModel = function(model)
     assert(type(model) == "number", "Model must be a number")
     if not modList[model] then
-        outputMsg(("Model %d does not have a mod assigned"):format(model), 1)
+        outputMsg(("Model %d does not have a mod assigned"):format(model), 2)
         return false
     end
     modList[model] = nil
