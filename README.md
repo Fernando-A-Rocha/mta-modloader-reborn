@@ -1,8 +1,8 @@
 ![MTA modloader reborn banner SM](https://github.com/Fernando-A-Rocha/mta-modloader-reborn/assets/34967844/d330016b-03e4-42a3-bd8b-bdb8793d25bc)
 
-Easy to use modloader for MTA:SA.
+Modern, robust and easy to use modloader for MTA:SA.
 
-Simply drag and drop the modded DFF/TXD files into the mods folder. They will be downloaded and applied automatically for every player.
+Simply drag and drop the modded DFF/TXD/COL files into the mods folder. They will be downloaded and applied automatically for every player.
 
 **Security feature**: Only files provided by the server are loaded, meaning that if the user adds random files to the mods directory in their resource cache, they won't be recognized and loaded.
 
