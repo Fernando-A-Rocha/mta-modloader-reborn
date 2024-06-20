@@ -80,12 +80,11 @@ Returns the mod loaded for a specific model ID
 ```lua
 local mod = getModLoadedForModel(model)
 if mod then
-    print(("Mod loaded for model %d: %s"):format(
-        model,
-        (mod.dffPath and (mod.dffPath .. " ") or "")
-        .. (mod.txdPath and (mod.txdPath .. " ") or "")
-        .. (mod.colPath and (mod.colPath) or "")
-    ))
+    print("Mod loaded for model ID " .. model,
+        mod.dffPath,
+        mod.txdPath,
+        mod.colPath
+    )
 else
     print(("No mod loaded for model %d"):format(model))
 end
