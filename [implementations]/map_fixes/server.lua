@@ -1,3 +1,13 @@
+--[[
+    San Andreas Map Bug Fixes
+
+    This resource is intended to fix some bugs in the MTA:SA world.
+
+    Some of the issues are not present in the Singleplayer GTA:SA game
+    because the game loads additional SCM scripts related to
+    missions/progression that are not loaded in MTA:SA.
+]]
+
 local resourceName = getResourceName(resource)
 local modloaderResourceName = "modloader_reborn"
 
