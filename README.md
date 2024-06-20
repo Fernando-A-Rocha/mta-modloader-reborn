@@ -54,9 +54,9 @@ This resource features a scripting API that allows you to interact with the modl
 
 - `"modloader_reborn:client:onModLoaded"` | *Source*: always **localPlayer**
 
+Event is triggered when a mod is loaded (if it failed for some reason, the variable `loadSuccess` will be false)
+
 ```lua
--- Event is triggered when a mod is loaded
--- (if it failed for some reason, the variable loadSuccess will be false)
 addEventHandler("modloader_reborn:client:onModLoaded", localPlayer,
     function(
             model, -- MTA Model ID number
@@ -77,8 +77,9 @@ false)
 
 - `table / nil getModLoadedForModel(number model)`
 
+Returns the mod loaded for a specific model ID
+
 ```lua
--- Returns the mod loaded for a specific model ID
 local mod = getModLoadedForModel(model)
 if mod then
     print(("Mod loaded for model %d: %s"):format(
@@ -94,8 +95,9 @@ end
 
 - `table getModsLoaded()`
 
+Returns a table containing all the mods loaded
+
 ```lua
--- Returns a table containing all the mods loaded
 local mods = getModsLoaded()
 for model, mod in pairs(mods) do
     print(("Mod loaded for model %d: %s"):format(
@@ -111,8 +113,12 @@ end
 
 - `bool setModForModel(number model, table mod)`
 
+Defines a mod for a specific model ID that all players will automatically load.
+
 See [map_fixes/server.lua](/[implementations]/map_fixes/server.lua) for example usage.
 
 - `bool removeModForModel(number model)`
+
+Removes a mod for a specific model ID, unloading it for all players.
 
 See [map_fixes/server.lua](/[implementations]/map_fixes/server.lua) for example usage.
