@@ -24,27 +24,21 @@ Model IDs and game model names (dff & txd) are supported. [https://wiki.multithe
 
 Model IDs and game model names (dff & txd) are supported. [https://wiki.multitheftauto.com/wiki/All_Skins_Page](https://wiki.multitheftauto.com/wiki/All_Skins_Page)
 
+- Objects
+
+Model IDs and game model names (dff, col and txd) are supported. [https://dev.prineside.com/gtasa_samp_model_id/](https://dev.prineside.com/gtasa_samp_model_id/)
+
+FYI: To replace a model's collision, give the .col file the exact same name as the .dff (model name).
+
+Texture file names usually vary, and the same .txd can be reused for multiple models in GTA:SA.
+
+⚠️ Please note that GTA:SA has COL files that are used as **containers of multiple model collisions**. MTA will only load single-collision COL files. If you want to extract collisions into their own files use a tool like [CollEditor2](https://www.google.com/search?q=gta+sa+CollEditor2). Select a collision and right click - Export selected.
+
 ## Examples of valid mods
   
-Replacing the Infernus (ID 411):
+- Replacing the Infernus (ID 411): infernus.dff, infernus.txd OR 411.dff, 411.txd
 
-- infernus.dff
-- infernus.txd
-
-or
-
-- 411.dff
-- 411.txd
-
-Replacing the Clown skin (ID 264):
-
-- wmoice.dff
-- wmoice.txd
-
-or
-
-- 264.dff
-- 264.txd
+- Replacing the Clown skin (ID 264): wmoice.dff, wmoice.txd OR 264.dff, 264.txd
 
 ## Scripting API
 
