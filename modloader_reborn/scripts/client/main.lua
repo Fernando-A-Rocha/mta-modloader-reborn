@@ -6,7 +6,7 @@ addEvent("modloader_reborn:client:loadMods", true)
 addEvent("modloader_reborn:client:loadOneMod", true)
 addEvent("modloader_reborn:client:unloadOneMod", true)
 
-settingsFromServer = {}
+settings = {}
 modelsReplaced = {}
 
 local modsToLoad = {}
@@ -107,7 +107,7 @@ local function processBatch()
         )
 
         modsToLoad[model] = nil
-        if loadedCounter >= (settingsFromServer["*AMOUNT_MODS_PER_BATCH"]) then
+        if loadedCounter >= (settings["*AMOUNT_MODS_PER_BATCH"]) then
             break
         end
     end
@@ -122,7 +122,7 @@ local function coroutineLoader()
         if next(modsToLoad) then
             repeat
                 coroutine.yield()
-            until getTickCount() - startTick >= settingsFromServer["*TIME_MS_BETWEEN_BATCHES"]
+            until getTickCount() - startTick >= settings["*TIME_MS_BETWEEN_BATCHES"]
         end
     end
 end
@@ -160,10 +160,9 @@ local function beginLoadingMods()
     addEventHandler("onClientRender", root, onClientRenderHandler)
 end
 
-local function applySettingsFromServer(settings)
-    assert(type(settings) == "table", "Invalid argument #1 to 'applySettingsFromServer' (table expected, got " .. type(settings) .. ")" )
-    settingsFromServer = settings
-    outputSuccessMessages = settingsFromServer["*OUTPUT_SUCCESS_MESSAGES"] == "true"
+local function applySettingsFromServer(settingsFromServer)
+    assert(type(settingsFromServer) == "table", "Invalid argument #1 to 'applySettingsFromServer' (table expected, got " .. type(settingsFromServer) .. ")" )
+    settings = settingsFromServer
 end
 addEventHandler("modloader_reborn:client:applySettings", resourceRoot, applySettingsFromServer, false)
 

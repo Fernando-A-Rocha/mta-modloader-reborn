@@ -4,11 +4,11 @@ local CONFIG_DIR_MODS = "mods"
 local SETTING_NAMES = {"*AMOUNT_MODS_PER_BATCH", "*TIME_MS_BETWEEN_BATCHES", "*OUTPUT_SUCCESS_MESSAGES"} -- must match meta.xml <settings/>
 
 modList = {}
+settings = {}
 
 local startupLoading = true
 local playersWaitingQueue = {}
 local clientsReady = {}
-local settings = {}
 
 for _, settingName in pairs(SETTING_NAMES) do
     local settingValue = get(settingName)
@@ -18,7 +18,6 @@ for _, settingName in pairs(SETTING_NAMES) do
     end
     settings[settingName] = settingValue
 end
-outputSuccessMessages = settings["*OUTPUT_SUCCESS_MESSAGES"] == "true"
 
 local function endsWith(str, ending)
     return ending == '' or str:sub(-#ending) == ending
@@ -54,12 +53,18 @@ local function loadAllModsForPlayer(player)
     triggerClientEvent(player, "modloader_reborn:client:loadMods", resourceRoot, modList)
 end
 
+local function sendSettingsToPlayer(player)
+    triggerClientEvent(player, "modloader_reborn:client:applySettings", resourceRoot, settings)
+end
+
 local function handlePlayerResourceStart(res)
     if res ~= resource then
         return
     end
-    triggerClientEvent(source, "modloader_reborn:client:applySettings", resourceRoot, settings)
     clientsReady[source] = true
+
+    sendSettingsToPlayer(source)
+    
     if startupLoading then
         playersWaitingQueue[source] = true
         return
@@ -165,3 +170,14 @@ local function prepareMods()
     startupLoading = nil
 end
 addEventHandler("onResourceStart", resourceRoot, prepareMods, false)
+
+addEventHandler("onSettingChange", root, function(settingName, oldValue, newValue)
+    settingName = settingName:gsub(resourceName..("."), "")
+    if settings[settingName] == nil then
+        return
+    end
+    settings[settingName] = newValue
+    for player, _ in pairs(clientsReady) do
+        sendSettingsToPlayer(player)
+    end
+end, false)
