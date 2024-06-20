@@ -10,7 +10,7 @@ Simply drag and drop the modded DFF/TXD files into the mods folder. They will be
 
 ## Download
 
-**Latest release**: [https://github.com/Fernando-A-Rocha/mta-modloader-reborn/releases/latest](https://github.com/Fernando-A-Rocha/mta-modloader-reborn/releases/latest)
+<!-- **Latest release**: [https://github.com/Fernando-A-Rocha/mta-modloader-reborn/releases/latest](https://github.com/Fernando-A-Rocha/mta-modloader-reborn/releases/latest) -->⚠️ Please wait for the next stable release.
 
 ## Tutorial
 
