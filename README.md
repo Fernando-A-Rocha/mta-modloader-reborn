@@ -12,6 +12,10 @@ Simply drag and drop the modded DFF/TXD files into the mods folder. They will be
 
 <!-- **Latest release**: [https://github.com/Fernando-A-Rocha/mta-modloader-reborn/releases/latest](https://github.com/Fernando-A-Rocha/mta-modloader-reborn/releases/latest) -->⚠️ Please wait for the next stable release.
 
+## Video
+
+**Getting Started** video coming soon. I know it's easier to understand with a visual guide.
+
 ## Tutorial
 
 This script automatically matches the file names to the model IDs of the game. The files must be placed in the `mods` folder in the resource directory.
