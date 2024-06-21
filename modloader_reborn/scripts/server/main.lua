@@ -84,7 +84,9 @@ addEventHandler("onPlayerResourceStart", root, handlePlayerResourceStart)
 
 addEventHandler("onPlayerQuit", root, function()
     clientsReady[source] = nil
-    playersWaitingQueue[source] = nil
+    if startupLoading then
+        playersWaitingQueue[source] = nil
+    end
 end)
 
 function checkFileAboveSizeThreshold(filePath)
