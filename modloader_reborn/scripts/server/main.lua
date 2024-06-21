@@ -224,12 +224,12 @@ local function prepareMods()
 end
 addEventHandler("onResourceStart", resourceRoot, prepareMods, false)
 
-addEventHandler("onSettingChange", root, function(settingName, oldValue, newValue)
+addEventHandler("onSettingChange", root, function(settingName)
     settingName = settingName:gsub(resourceName..("."), "")
     if settings[settingName] == nil then
         return
     end
-    settings[settingName] = newValue
+    settings[settingName] = get(settingName)
     for player, _ in pairs(clientsReady) do
         sendSettingsToPlayer(player)
     end
