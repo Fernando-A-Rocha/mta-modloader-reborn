@@ -130,9 +130,8 @@ function checkFileAboveSizeThreshold(filePath)
     end
 end
 
-local function parseModFile(fileName)
-    local realFilePath = string.format("%s/%s", CONFIG_DIR_MODS, fileName)
-    if not pathIsFile(realFilePath) then
+local function processModFile(completePath, fileName)
+    if not pathIsFile(completePath) then
         return
     end
     local isDFF = endsWith(fileName, ".dff")
@@ -142,7 +141,7 @@ local function parseModFile(fileName)
         return
     end
     
-    checkFileAboveSizeThreshold(realFilePath)
+    checkFileAboveSizeThreshold(completePath)
 
     local modelStr = string.sub(fileName, 1, -5)
     local model
@@ -200,22 +199,35 @@ local function parseModFile(fileName)
         modList[model] = {}
     end
     if isCOL then
-        modList[model].colPath = realFilePath
+        modList[model].colPath = completePath
     elseif isTXD then
-        modList[model].txdPath = realFilePath
+        modList[model].txdPath = completePath
     elseif isDFF then
-        modList[model].dffPath = realFilePath
+        modList[model].dffPath = completePath
     end
 end
 
 local function prepareMods()
     if not pathIsDirectory(CONFIG_DIR_MODS) then
         outputMsg("Mods directory not found: " .. CONFIG_DIR_MODS, 1)
+        playersWaitingQueue = nil
+        startupLoading = nil
         return
     end
 
-    for _, fileName in pairs(pathListDir(CONFIG_DIR_MODS) or {}) do
-        parseModFile(fileName)
+    -- Recursively search for mods in the mods directory and its subdirectories
+    local function processFileOrFolder(pathToLocation, fileOrDirName)
+        local completePath = pathToLocation.."/"..fileOrDirName
+        if pathIsFile(completePath) then
+            processModFile(completePath, fileOrDirName)
+        elseif pathIsDirectory(completePath) then
+            for _, fileOrDirName2 in pairs(pathListDir(completePath) or {}) do
+                processFileOrFolder(completePath, fileOrDirName2)
+            end
+        end
+    end
+    for _, fileOrDirName in pairs(pathListDir(CONFIG_DIR_MODS) or {}) do
+        processFileOrFolder(CONFIG_DIR_MODS, fileOrDirName)
     end
 
     for player, _ in pairs(playersWaitingQueue) do

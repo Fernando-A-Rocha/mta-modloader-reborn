@@ -33,9 +33,9 @@
       <export function="removeModForModel" type="server"/>
 
     <!-- Auto-detected mod files -->
-    <file src="mods/*.col"/>
-    <file src="mods/*.txd"/>
-    <file src="mods/*.dff"/>
+    <file src="mods/**/*.col"/>
+    <file src="mods/**/*.txd"/>
+    <file src="mods/**/*.dff"/>
 
     <!-- ACL permissions that this resource requires -->
     <aclrequest>
