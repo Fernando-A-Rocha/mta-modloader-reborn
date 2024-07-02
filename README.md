@@ -10,7 +10,7 @@ Simply drag and drop the modded DFF/TXD/COL files into the mods folder. They wil
 
 ## Download
 
-<!-- **Latest release**: [https://github.com/Fernando-A-Rocha/mta-modloader-reborn/releases/latest](https://github.com/Fernando-A-Rocha/mta-modloader-reborn/releases/latest) -->⚠️ Please wait for the next stable release.
+**Latest release**: [https://github.com/Fernando-A-Rocha/mta-modloader-reborn/releases/latest](https://github.com/Fernando-A-Rocha/mta-modloader-reborn/releases/latest)
 
 ## Video
 
@@ -112,10 +112,6 @@ end
 
 Defines a mod for a specific model ID that all players will automatically load.
 
-See [map_fixes/server.lua](/[implementations]/map_fixes/server.lua) for example usage.
-
 - `bool removeModForModel(number model)`
 
 Removes a mod for a specific model ID, unloading it for all players.
-
-See [map_fixes/server.lua](/[implementations]/map_fixes/server.lua) for example usage.
