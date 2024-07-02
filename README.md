@@ -18,6 +18,8 @@ Simply drag and drop the modded DFF/TXD/COL files into the mods folder. They wil
 
 ## Tutorial
 
+Install the resource that you downloaded from the **Releases** page. Read [this guide](https://wiki.multitheftauto.com/wiki/Server_Manual#Installing/Updating_resources_on_your_server) if unsure how to add the resource to your server.
+
 This script automatically matches the file names to the model IDs of the game. The files must be placed in the `mods` folder in the resource directory.
 
 - Vehicles
