@@ -1,6 +1,6 @@
 <meta>
     <info author="Fernando" name="modloader-reborn"
-      description="minimalistic script that replaces skins, vehicles and weapons from files without any config needed"
+      description="minimalistic script that replaces skins, vehicles and objects from files without any config needed"
       version="1.2.1"
       type="script"/>
 
