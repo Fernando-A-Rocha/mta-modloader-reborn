@@ -415,6 +415,7 @@ DATA_SKINS = {
 [196]={dff="cwfofr",txd="cwfofr"},
 [197]={dff="cwfohb",txd="cwfohb"},
 [198]={dff="cwfyfr1",txd="cwfyfr1"},
+[199]={dff="cwfyfr2",txd="cwfyfr2"},
 [200]={dff="cwmyhb2",txd="cwmyhb2"},
 [201]={dff="dwfylc2",txd="dwfylc2"},
 [202]={dff="dwmylc2",txd="dwmylc2"},
